@@ -1,0 +1,44 @@
+=============================READ ME========================
+
+Codes/
+1.Original_Ear_Decompostion.c -> Implementation of original ear decompositon Algorithm
+2.Modified_Ear_Decomposition_V1.cpp -> Implementation of Modified Algorithm without rearrangement of Trivial Ears(without numbering trivial ears)
+3.Modified_Ear_Decomposition_V2.cpp (Code is pending) -> Implementation of Modified Algorithm with rearrangement of Trivial Ears(incomplete need to work on updating reverse offset)
+4.Verication.py -> Implementation of verification code 
+
+data/
+1.inp_converter.py -> converts random .mtx file to CSR format
+2.Remaining - all randomly generated csr files
+
+output/
+1.Runtime.txt -> runtimes of all the data in all versions
+2.check.txt -> temp ears generated and to verify correctness
+3.<remaining> - Ears generated original algorithm
+4.M_<remaining> - Ears generated Modified Version-1 algorithm
+
+README
+
+Results_V1.ods(Comparision between Version-1 and Original Algorithm)
+
+==============================================================
+/Codes/
+
+1.For Checking time 
+
+cd Codes/
+g++ <filename> -fopenmp
+./a.out <../data/1_csr_1k_1M.txt
+
+
+2.For Checking Correctness
+
+// De-Comment the printf statements in 
+	(i)Ear_Decomposition() and 
+	(ii)traverse()
+// Comment the last printf statement(which prints time)
+
+cd Codes/
+g++ <filename> -fopenmp
+./a.out <../data/1_csr_1k_1M.txt>../output/check.txt
+python Verification.py 
+
