@@ -18,15 +18,13 @@
 #include <time.h>
 #include <iostream>
 #include <queue>
-#include <cstring>
-
 using namespace std;
 
 #define No_nodes 1000000 //Number of Nodes
 #define No_edges 100000000 //2*Number of Edges(length of column offset)
 
-//int row_offset_start[No_nodes],row_offset_end[No_nodes];
-//int column_offset[No_edges];
+int row_offset_start[No_nodes],row_offset_end[No_nodes];
+int column_offset[No_edges];
 
 int i,len_row,len_column;
 int parent[No_nodes],Time[No_nodes],value[No_nodes],count=1;
@@ -34,28 +32,13 @@ int parent_new[No_nodes];
 int store_count[No_nodes];
 
 int Chains[No_edges],chain_index=0;
-//int visited_bfs[No_nodes];
-//int visited_dfs[No_nodes];
-//int visited_traverse[No_nodes];
-//int reverse_offset[No_edges];
-
-int *row_offset_start, *row_offset_end;
-int *column_offset;
-
-
-int *visited_bfs;
-int *visited_dfs;
-int *visited_traverse;
-int *reverse_offset;
-
-int *temp_offset_end;
-int *column_offset_new;
-
-
-
+int visited_bfs[No_nodes];
+int visited_dfs[No_nodes];
+int visited_traverse[No_nodes];
+int reverse_offset[No_edges];
 /*-----------------------------------------*/
 /*******************************************/
-//int	temp_offset_end[No_nodes],column_offset_new[No_edges];
+int	temp_offset_end[No_nodes],column_offset_new[No_edges];
 
 void Store_Tree_U_Forest_New(int u , int v) /*Creating TUF graph in CSR format*/
 {
@@ -265,30 +248,16 @@ int main()
 {
 		
 		scanf("%d %d",&len_row,&len_column);
-
-		/* INITIALIZE MEMORY HERE */
-		row_offset_start = new int[len_row + 2];
-		row_offset_end = new int[len_row + 2];
-		column_offset = new int[len_column];
-		visited_bfs = new int[len_row + 1];
-		visited_dfs = new int[len_row + 1];
-		visited_traverse = new int[len_row + 1];
-		reverse_offset = new int[len_column + 1];
-		temp_offset_end = new int[len_row + 1];
-
-		column_offset_new = new int[len_column + 1];
-
 		for (i = 1; i <=len_row; i++)
 		{
 			scanf("%d",&row_offset_start[i]);	
 		
+			visited_dfs[i]=0;
+			visited_bfs[i]=0;
+			visited_traverse[i]=0;
 			temp_offset_end[i]=row_offset_start[i];
+		
 		}
-
-		memset(visited_dfs,0,sizeof(int) * len_row);
-		memset(visited_bfs,0,sizeof(int) * len_row);
-		memset(visited_traverse,0,sizeof(int) * len_row);
-
 		for (i = 1; i <=len_column; i++)
 		{
 			scanf("%d",&column_offset[i]);
@@ -355,18 +324,6 @@ int main()
 
 		printf("Time for Modified approach Version-2:%lf sec\n",bfs_time + dfs_time + ear_decomp_time );
 
-
-	/* CLEAR MEMORY */
-exit:
-
-	delete[] row_offset_start;
-	delete[] row_offset_end;
-	delete[] column_offset;
-	delete[] visited_bfs;
-	delete[] visited_dfs;
-	delete[] visited_traverse;
-	delete[] reverse_offset;
-	delete[] temp_offset_end;
 		
 	return 0;
 
