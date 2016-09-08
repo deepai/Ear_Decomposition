@@ -22,21 +22,29 @@ using namespace std;
 #define No_nodes 1000000 //Number of Nodes
 #define No_edges 100000000 //2*Number of Edges(length of column offset)
 
-int row_offset_start[No_nodes],row_offset_end[No_nodes];
-int column_offset[No_edges];
+int *row_offset_start;
+int *row_offset_end;
 
-int i,len_row,len_column;
-int parent[No_nodes],Time[No_nodes],value[No_nodes],count=1;
-int parent_new[No_nodes];
-int store_count[No_nodes];
+int *column_offset;
 
-int Chains[No_edges],chain_index=0;
-int visited_bfs[No_nodes];
-int visited_dfs[No_nodes];
-int visited_traverse[No_nodes];
+int i,len_row,len_column,count = 1;
+int *parent;
+int *Time;
+int *value;
+
+int *parent_new;
+int *store_count;
+int *Chains;
+int chain_index;
+int *visited_bfs;
+int *visited_dfs;
+int *visited_traverse;
+
+
 /*-----------------------------------------*/
 /*******************************************/
-int	new_offset_end[No_nodes],column_offset_new[No_edges];
+int	*new_offset_end;
+int *column_offset_new;
 
 void Store_Tree_U_Forest_New(int u , int v) /*Creating TUF graph in CSR format*/
 {
@@ -148,7 +156,7 @@ void dfs(int v) /*Making DFS tree on TUF graph*/
 void traverse(int s,int d) /*Printing All ear's*/
 {
 	int pointer=s;
-	printf("%d ", s);//
+	//printf("%d ", s);//
 	Chains[chain_index]=s;
 	visited_traverse[pointer]=1;
 	chain_index++;
@@ -159,20 +167,20 @@ void traverse(int s,int d) /*Printing All ear's*/
 		{
 			Chains[chain_index]=pointer;
 			chain_index++;
-			printf("%d ", pointer);//
+			//printf("%d ", pointer);//
 			break;
 		}
 		if (pointer==s )
 		{
 			Chains[chain_index]=pointer;
 			chain_index++;
-			printf("%d ", pointer);//
+			//printf("%d ", pointer);//
 			break;
 		}
 		visited_traverse[pointer] = 1;
 		Chains[chain_index]=pointer;
 		chain_index++;
-		printf("%d ", pointer);//
+		//printf("%d ", pointer);//
 		pointer=parent[pointer];
 	}
 	Chains[chain_index]=0;
@@ -197,8 +205,27 @@ void Ear_Decompostion() /*Selecting non tree edges from TUF to print ear's*/
 
 int main()
 {
-		
 		scanf("%d %d",&len_row,&len_column);
+		
+		row_offset_start = new int[len_row + 2];
+		row_offset_end = new int[len_row + 2];
+
+		column_offset = new int[len_column + 1];
+		parent = new int[len_row + 1];
+		Time = new int[len_row + 1];
+		value = new int[len_row + 1];
+
+		parent_new = new int[len_row + 1];;
+		store_count = new int[len_row + 1];; 
+		Chains = new int[len_row + 1];;
+		
+		visited_bfs = new int[len_row + 1];
+		visited_dfs = new int[len_row + 1];
+		visited_traverse = new int[len_row + 1];
+
+		new_offset_end = new int[len_row + 1];
+		column_offset_new = new int[len_row + 1];
+
 		for (i = 1; i <=len_row; i++)
 		{
 			scanf("%d",&row_offset_start[i]);	
@@ -252,9 +279,27 @@ int main()
 		end_time=omp_get_wtime();
 		ear_decomp_time=end_time- start_time;
 
-		//printf("Time for Modified approach Version-1:%lf sec\n",bfs_time + dfs_time + ear_decomp_time );
+		printf("Time for Modified approach Version-1:%lf sec\n",bfs_time + dfs_time + ear_decomp_time );
+
+		delete[] row_offset_start;
+		delete[] row_offset_end;
+
+		delete[] column_offset;
+		delete[] parent;
+		delete[] Time;
+		delete[] value;
+
+		delete[] parent_new;
+		delete[] store_count;
+		delete[] Chains;
+		
+		delete[] visited_bfs;
+		delete[] visited_dfs;
+		delete[] visited_traverse;
+
+		delete[] new_offset_end;
+		delete[] column_offset_new;
 
 	return 0;
-
 
 }
