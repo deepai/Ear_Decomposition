@@ -23,8 +23,6 @@ using namespace std;
 #define No_edges 100000000 //2*Number of Edges(length of column offset)
 
 int *row_offset_start;
-int *row_offset_end;
-
 int *column_offset;
 
 int i,len_row,len_column,count = 1;
@@ -57,36 +55,31 @@ void Store_Tree_U_Forest_New(int u , int v) /*Creating TUF graph in CSR format*/
 void bfs() /*Selecting Tree edges*/
 {
 	int s=1;
-	queue <int> bfs_queue,index_queue;
-	int value[No_nodes],count=0;
+	queue <int> bfs_queue;
+	int count=0;
 	bfs_queue.push(s);
-	index_queue.push(1);
 	value[s]=count;
 	count++;
 	visited_bfs[s]=1;
-	int end;
 	parent_new[1]=1;
+	int v,w,i,row_offset_end;
 	while (!bfs_queue.empty())
 	{
-		int v,w,i,j,end1;
 		v = bfs_queue.front();
-		int index_u=index_queue.front();
 		Time[v]=count;
 		count++;
 		bfs_queue.pop();
-		index_queue.pop();
 		if(v+1<=len_row)
-			end=row_offset_start[v+1];
+			row_offset_end=row_offset_start[v+1];
 		else
-			end=len_column+1;
-		for(i=row_offset_start[v];i<end;i++)
+			row_offset_end=len_column+1;
+		for(i=row_offset_start[v];i<row_offset_end;i++)
 		{
 			w=column_offset[i];
 			if(visited_bfs[w]==0)
 			{
 				visited_bfs[w]=1;
 				bfs_queue.push(w);
-				index_queue.push(i);
 				Store_Tree_U_Forest_New(v,w);
 				parent_new[w]=v;
 				store_count[v]++;
@@ -99,19 +92,23 @@ void bfs() /*Selecting Tree edges*/
 int random_edges() /*Selecting log(n)-1 edges from each node*/
 {
 	int  threshold= log(No_nodes)/log(2);
+	int random, row_offset_end;
 	srand(time(NULL));
 	for(int iter = 1; iter <= len_row; iter++)
 	{
-		int random;		
-		if(threshold < (row_offset_end[iter] - row_offset_start[iter]))
+		if(iter==len_row)
+			row_offset_end=len_column;
+		else
+			row_offset_end=row_offset_start[iter+1];
+		if(threshold < (row_offset_end - row_offset_start[iter]))
 		{
 			while(store_count[iter] < threshold)
 			{
 
 				store_count[iter]++;
-				random = row_offset_start[iter] + (rand()%( row_offset_end[iter] - row_offset_start[iter] ));
-				if(random > row_offset_end[iter])
-					random=row_offset_end[iter];
+				random = row_offset_start[iter] + (rand()%( row_offset_end - row_offset_start[iter] ));
+				if(random > row_offset_end)
+					random=row_offset_end;
 				if(iter<column_offset[random])
 				{
 					store_count[iter]++;
@@ -123,7 +120,7 @@ int random_edges() /*Selecting log(n)-1 edges from each node*/
 		}
 		else
 		{
-			for (int u = row_offset_start[iter] ; u < row_offset_end[iter]; u++)
+			for (int u = row_offset_start[iter] ; u < row_offset_end; u++)
 			{
 				if(iter<column_offset[u])
 				{
@@ -208,7 +205,6 @@ int main()
 		scanf("%d %d",&len_row,&len_column);
 		
 		row_offset_start = new int[len_row + 2];
-		row_offset_end = new int[len_row + 2];
 
 		column_offset = new int[len_column + 1];
 		parent = new int[len_row + 1];
@@ -240,21 +236,6 @@ int main()
 			scanf("%d",&column_offset[i]);
 		}
 		
-		for (i = 1; i <=len_row; i++)
-		{
-			if(i==len_row)
-			{
-				row_offset_end[i] = len_column;
-			}
-			else
-			{
-				row_offset_end[i]=row_offset_start[i+1]-1;
-			}
-		}
-
-	
-		
-
 		double start_time,end_time,bfs_time,random_edges_time,dfs_time,ear_decomp_time;
 		
 		start_time=omp_get_wtime();
@@ -282,7 +263,6 @@ int main()
 		printf("Time for Modified approach Version-1:%lf sec\n",bfs_time + dfs_time + ear_decomp_time );
 
 		delete[] row_offset_start;
-		delete[] row_offset_end;
 
 		delete[] column_offset;
 		delete[] parent;
