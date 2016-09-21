@@ -36,6 +36,7 @@ int visited_bfs[No_nodes];
 int visited_dfs[No_nodes];
 int visited_traverse[No_nodes];
 int reverse_offset[No_edges];
+int single_row_offset_start[No_nodes],single_row_offset_end[No_nodes],single_column_offset[No_edges],single_len_column=0;
 /*-----------------------------------------*/
 /*******************************************/
 int	temp_offset_end[No_nodes],column_offset_new[No_edges];
@@ -107,68 +108,39 @@ void bfs() /*Selecting Tree edges*/
 
 int random_edges() /*Selecting log(n)-1 edges from each node*/
 {
-	int  threshold= log(No_nodes)/log(2);
+	int  threshold = log(No_nodes)/log(2);
 	srand(time(NULL));
 	for(int u = 1; u <= len_row; u++)
 	{
 		int v;		
-		if(threshold < (row_offset_end[u] - row_offset_start[u]))
+		if(threshold < (single_row_offset_end[u] - single_row_offset_start[u]))
 		{
 			while(store_count[u] < threshold)
 			{
-
-				store_count[u]++;
-				v = row_offset_start[u] + (rand()%( row_offset_end[u] - row_offset_start[u]));
-				/*if(v > row_offset_end[u])
-					v=row_offset_end[u];*/
-				if(u<column_offset[v])
-				{
-					store_count[u]++;
-					store_count[column_offset[v]]++;
-					Store_Tree_U_Forest_New(u,column_offset[v]);
 				
-					column_offset[v]=column_offset[row_offset_end[u]];
+				store_count[u]++;
+				v = single_row_offset_start[u] + (rand()%( single_row_offset_end[u] - single_row_offset_start[u]));
+				if(u<single_column_offset[v])
+				{
 					
-					column_offset[reverse_offset[v]]=column_offset[row_offset_end[column_offset [v]]];	
-
-					reverse_offset[reverse_offset[row_offset_end[column_offset[v]]]]=reverse_offset[v];
-					
-					reverse_offset[reverse_offset[v]]=reverse_offset[row_offset_end[column_offset[v]]];
-					
-					reverse_offset[v]=reverse_offset[row_offset_end[u]];
-
-					reverse_offset[reverse_offset[row_offset_end[u]]]=v;
-
-
-					row_offset_end[u]--;
-					row_offset_end[column_offset[v]]--;
+					store_count[u]++;
+					Store_Tree_U_Forest_New(u,single_column_offset[v]);
+				
+					single_column_offset[v]=single_column_offset[single_row_offset_end[u]];
+					single_row_offset_end[u]--;
 				}
 						
 			}
 		}
 		else
 		{
-			for (v = row_offset_start[u] ; v < row_offset_end[u]; v++)
+			for (v = single_row_offset_start[u] ; v < single_row_offset_end[u]; v++)
 			{
-				if(u<column_offset[v])
+				if(u<single_column_offset[v])
 				{
-					Store_Tree_U_Forest_New(u,column_offset[v]);
-					
-				column_offset[v]=column_offset[row_offset_end[u]];
-					
-					column_offset[reverse_offset[v]]=column_offset[row_offset_end[column_offset [v]]];	
-
-					reverse_offset[reverse_offset[row_offset_end[column_offset[v]]]]=reverse_offset[v];
-					
-					reverse_offset[reverse_offset[v]]=reverse_offset[row_offset_end[column_offset[v]]];
-					
-					reverse_offset[v]=reverse_offset[row_offset_end[u]];
-
-					reverse_offset[reverse_offset[row_offset_end[u]]]=v;
-
-
-					row_offset_end[u]--;
-					row_offset_end[column_offset[v]]--;
+					Store_Tree_U_Forest_New(u,single_column_offset[v]);
+					column_offset[v]=column_offset[single_row_offset_end[u]];
+					single_row_offset_end[u]--;
 				}
 			}		
 		}
@@ -197,7 +169,7 @@ void dfs(int v) /*Making DFS tree on TUF graph*/
 void traverse(int s,int d) /*Printing All ear's*/
 {
 	int pointer=s;
-//		printf("%d ", s);
+		//printf("%d ", s);
 	Chains[chain_index]=s;
 	visited_traverse[pointer]=1;
 	chain_index++;
@@ -208,20 +180,20 @@ void traverse(int s,int d) /*Printing All ear's*/
 		{
 			Chains[chain_index]=pointer;
 			chain_index++;
-//				printf("%d ", pointer);
+				//printf("%d ", pointer);
 			break;
 		}
 		if (pointer==s )
 		{
 			Chains[chain_index]=pointer;
 			chain_index++;
-//				printf("%d ", pointer);
+				//printf("%d ", pointer);
 			break;
 		}
 		visited_traverse[pointer] = 1;
 		Chains[chain_index]=pointer;
 		chain_index++;
-///			printf("%d ", pointer);
+			//printf("%d ", pointer);
 		pointer=parent[pointer];
 	}
 	Chains[chain_index]=0;
@@ -231,6 +203,7 @@ void traverse(int s,int d) /*Printing All ear's*/
 void Ear_Decompostion() /*Selecting non tree edges from TUF to print ear's*/
 {
 	int i,j,end;
+				
 	for(i = 1; i <=len_row; i++)
 	{
 		for(j=row_offset_start[Time[i]];j<temp_offset_end[Time[i]];j++)
@@ -238,7 +211,7 @@ void Ear_Decompostion() /*Selecting non tree edges from TUF to print ear's*/
 			if (value[Time[i]] < value[column_offset_new[j]] && Time[i]!=parent[column_offset_new[j]] )  //The second condition is for tree edges.
 			{
 				traverse(Time[i],column_offset_new[j]);			
-//				printf("\n");
+				//printf("\n");
 			}
 		}
 	}
@@ -271,24 +244,26 @@ int main()
 			}
 			else
 			{
-				row_offset_end[i]=row_offset_start[i+1]-1;
+				row_offset_end[i]=row_offset_start[i+1]; 
 			}
 		}
-
-			 int k=1,it,j;
+		/*Generator Single CSR*/
+		int k=1,it,j;
 		    for(i = 1; i <=len_row; i++)
 		    {
+		    	single_row_offset_start[i]=single_len_column;
 		        for(j=row_offset_start[i];j<row_offset_end[i];j++)
 		        {
-		            for(it=row_offset_start[column_offset[j]];it<row_offset_end[column_offset[j]];it++)
-		            {
-		                if(column_offset[it]==i)
-		                    reverse_offset[k]=it;
-		            }
-		            k++;
+		        	if(column_offset[j]>i)
+					{
+
+						single_column_offset[single_len_column]=column_offset[j];
+						single_len_column++;
+					}
 		        }
-		    }
-		
+		        single_row_offset_end[i]=single_len_column;
+		}
+		/*End of Single CSR*/
 
 		double start_time,end_time,bfs_time,random_edges_time,dfs_time,ear_decomp_time;
 		
@@ -313,9 +288,9 @@ int main()
 		Ear_Decompostion();
 		for(i=0;i<len_row;i++)
 		{
-			for(j=row_offset_start[i];j<row_offset_end[i];j++)
+			for(j=single_row_offset_start[i];j<single_row_offset_end[i];j++)
 			{
-	//			printf("%d %d\n",i,column_offset[j]);			
+				//printf("%d %d\n",i,single_column_offset[j]);			
 			}
 
 		}
