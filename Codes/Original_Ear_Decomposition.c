@@ -42,7 +42,7 @@ int Visited[No_nodes]={0},ind=0;
 void traverse(int s,int d)
 {
 	int pointer=s;
-	printf("%d ", s); //
+//	printf("%d ", s); //
 	Chains[ind]=s;
 	Visited[pointer]=1;
 	ind++;
@@ -53,21 +53,21 @@ void traverse(int s,int d)
 		{
 			Chains[ind]=pointer;
 			ind++;
-			printf("%d ", pointer); //
+//			printf("%d ", pointer); //
 			break;
 		}
 		if (pointer==s)
 		{
 			Chains[ind]=pointer;
 			ind++;
-			printf("%d ", pointer);//
+//			printf("%d ", pointer);//
 			break;
 		}
 		Visited[pointer]=1;
 		Chains[ind]=pointer;
 		ind++;
-		printf("%d ", pointer);//
-		pointer=parent[pointer];
+//		printf("%d ", pointer);//
+//		pointer=parent[pointer];
 	}
 	Chains[ind]=0;
 	ind++;
@@ -88,7 +88,7 @@ void ear_decomposition()
 			{
 				no_chain++;
 				traverse(Time[i],column_offset[j]);			
-				printf("\n");//
+//				printf("\n");//
 			}
 		}
 	}
@@ -121,14 +121,14 @@ int main()
 	ear_decomposition();
 	end_ear=omp_get_wtime();
 	ear_time=end_ear - start_ear;
-/*		printf("\n**************Original_Ear_Decomposition*****************\n\n");
+
+	printf("\n**************Original_Ear_Decomposition*****************\n\n");
     	printf("Time taken for Ear Decompostion: %lf seconds\n", ear_time+dfs_time);
-		printf("              (i)  DFS Tree: %lf seconds\n", dfs_time);
-		//printf("                   row:%d     column_offset:%d\n\n",len_row,len_column );
-		printf("              (ii) Traversing: %lf seconds\n", ear_time);
+	printf("              (i)  DFS Tree: %lf seconds\n", dfs_time);
+	//printf("                   row:%d     column_offset:%d\n\n",len_row,len_column );
+	printf("              (ii) Traversing: %lf seconds\n", ear_time);
+	printf("\n******************************************\n");																																					
 
-		printf("\n******************************************\n");*/																																						
-
-	//printf("Time for Original Ear Decomposition: %lfsec\n",ear_time+dfs_time);
+	printf("Time for Original Ear Decomposition: %lfsec\n",ear_time+dfs_time);
     return 0;
 }
