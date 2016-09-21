@@ -40,5 +40,14 @@ g++ <filename> -fopenmp
 cd Codes/
 g++ <filename> -fopenmp
 ./a.out <../data/1_csr_1k_1M.txt>../output/check.txt
-python Verification.py 
+python Verification.py
+
+2) For Building all Files at once you could also use the Cmake..
+   If you have CMAKE version 3.0 or higher do the following
+   a) cd bin
+   b) cmake ../
+   c) make
+   
+ Now you have Ear_V1,Ear_V2 and Ear_Original corresponding to the three files in Codes/.
+ 
 
