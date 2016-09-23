@@ -14,7 +14,7 @@ add_executable(
 
 add_executable(
 	Ear_Original
-	Codes/Original_Ear_Decomposition.c
+	Codes/Original_Ear_Decomposition.cpp
 )
 
 target_link_libraries(
