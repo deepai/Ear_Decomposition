@@ -1,6 +1,9 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 2.8)
 
-add_compile_options(-O3 -std=c++11 -fopenmp -w)
+set(CMAKE_C_COMPILER /usr/bin/gcc)
+set(CMAKE_CXX_COMPILER /usr/bin/g++)
+
+add_compile_options(-fopenmp)
 
 add_executable(
 	Ear_V1

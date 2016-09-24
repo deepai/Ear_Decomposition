@@ -1,9 +1,3 @@
-/****************************************************************************************************/
-/*Date:21st August 2016*/
-/*Description: 1.Original Ear Decomposition
-			   2.For checking time comment printf statements in traverse() and Ear_Decomposition
-			   3. For checking exact-output comment last line(which prints time)*/
-/****************************************************************************************************/
 
 #include <stdio.h>
 #include <time.h>
@@ -50,20 +44,20 @@ void traverse(int s,int d)
 		{
 			Chains[ind]=pointer;
 			ind++;
-	//		printf("%d ", pointer); //
+			//printf("%d ", pointer); //
 			break;
 		}
 		if (pointer==s)
 		{
 			Chains[ind]=pointer;
 			ind++;
-	//		printf("%d ", pointer);//
+			//printf("%d ", pointer);//
 			break;
 		}
 		Visited[pointer]=1;
 		Chains[ind]=pointer;
 		ind++;
-	//	printf("%d ", pointer);//
+		//printf("%d ", pointer);//
 		pointer=parent[pointer];
 	}
 	Chains[ind]=0;
@@ -85,7 +79,7 @@ void ear_decomposition()
 			{
 				no_chain++;
 				traverse(Time[i],column_offset[j]);			
-		//		printf("\n");//
+				//printf("\n");//
 			}
 		}
 	}

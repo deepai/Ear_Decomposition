@@ -1,15 +1,3 @@
-/****************************************************************************************************/
-/*Date:21st August 2016*/
-/*Description: 1.Modified Ear Decomposition (with rearrangement of  trivial ears)
-			   2.Giving Ear numbers to Trivial Ears wich are left in main CSR after rearrangement.
-
-			   3. row_offset_start[u] and row_offset_end[u] Arrays are starting and ending indices of vertex "u"
-			      in column_offset[] Array (which are neighbours of vertx "u")
-			   4. new_offset_end[] and column_offset_new[] Arrays are for new (TUF - CSR) 
-	
-			   5. For checking time comment printf statements in traverse() and Ear_Decomposition
-			   6. For checking exact-output comment last line(which prints time)*/
-/****************************************************************************************************/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -155,7 +143,7 @@ void dfs(int v) /*Making DFS tree on TUF graph*/
 void traverse(int s,int d) /*Printing All ear's*/
 {
 	int pointer=s;
-	//	printf("%d ", s);
+		//printf("%d ", s);
 	Chains[chain_index]=s;
 	visited_traverse[pointer]=1;
 	chain_index++;
@@ -166,20 +154,20 @@ void traverse(int s,int d) /*Printing All ear's*/
 		{
 			Chains[chain_index]=pointer;
 			chain_index++;
-	//			printf("%d ", pointer);
+				//printf("%d ", pointer);
 			break;
 		}
 		if (pointer==s )
 		{
 			Chains[chain_index]=pointer;
 			chain_index++;
-	//			printf("%d ", pointer);
+				//printf("%d ", pointer);
 			break;
 		}
 		visited_traverse[pointer] = 1;
 		Chains[chain_index]=pointer;
 		chain_index++;
-	//		printf("%d ", pointer);
+			//printf("%d ", pointer);
 		pointer=parent[pointer];
 	}
 	Chains[chain_index]=0;
@@ -197,7 +185,7 @@ void Ear_Decompostion() /*Selecting non tree edges from TUF to print ear's*/
 			if (value[Time[i]] < value[column_offset_new[j]] && Time[i]!=parent[column_offset_new[j]] )  //The second condition is for tree edges.
 			{
 				traverse(Time[i],column_offset_new[j]);			
-	//			printf("\n");
+				//printf("\n");
 			}
 		}
 	}
@@ -300,7 +288,7 @@ column_offset_new=new int[len_column + 1];
 			{
 				if(parent_new[i]!=single_column_offset[j] && parent_new[single_column_offset[j]]!=i)
 				{
-		//			printf("%d %d\n",i,single_column_offset[j]);			
+					//printf("%d %d\n",i,single_column_offset[j]);			
 				}
 			}
 
