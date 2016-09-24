@@ -132,6 +132,7 @@ int main()
 
 		printf("\n******************************************\n");*/																																						
 
-	printf("Time for Original Ear Decomposition: %lfsec\n",ear_time+dfs_time);
+	//printf("Time for Original Ear Decomposition: %lfsec\n",ear_time+dfs_time);
+	printf("%lf\n",ear_time + dfs_time);
     return 0;
 }

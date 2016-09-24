@@ -296,7 +296,8 @@ column_offset_new=new int[len_column + 1];
 		end_time=omp_get_wtime();
 		ear_decomp_time=end_time- start_time;
 
-		printf("Time for Modified approach Version-2:%lf sec\n",bfs_time + dfs_time + ear_decomp_time );
+		//printf("Time for Modified approach Version-2:%lf sec\n",bfs_time + dfs_time + ear_decomp_time );
+		printf("%lf\n",bfs_time + dfs_time + ear_decomp_time);
 
 		
 	return 0;
