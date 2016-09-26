@@ -3,11 +3,20 @@ cmake_minimum_required(VERSION 2.8)
 set(CMAKE_C_COMPILER /usr/bin/gcc)
 set(CMAKE_CXX_COMPILER /usr/bin/g++)
 
+#include_directories(/opt/OGDF/include)
+#LINK_DIRECTORIES(/opt/OGDF/_release)
+
+
 add_compile_options(-O2 -std=c++11 -fopenmp -w)
 
 add_executable(
 	Ear_V1
 	Codes/Modified_Ear_Decomposition_V1.cpp
+)
+
+add_executable(
+	graph_csr_cc
+	Codes/graph_csr_cc.cpp
 )
 
 add_executable(
@@ -19,6 +28,7 @@ add_executable(
 	Ear_Original
 	Codes/Original_Ear_Decomposition.cpp
 )
+
 
 target_link_libraries(
     Ear_V1
