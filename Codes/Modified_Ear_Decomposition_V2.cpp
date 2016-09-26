@@ -197,24 +197,24 @@ int main()
 		scanf("%d %d",&len_row,&len_column);
 
 
-row_offset_start=new int[len_row + 1];
-row_offset_end=new int[len_row + 1];
-parent=new int[len_row + 1];
-Time=new int[len_row + 1];
-value=new int[len_row + 1];
-parent_new=new int[len_row + 1];
-store_count=new int[len_row + 1];
-visited_bfs=new int[len_row + 1];
-visited_dfs=new int[len_row + 1];
-visited_traverse=new int[len_row + 1];
-single_row_offset_start=new int[len_row + 1];
-single_row_offset_end=new int[len_row + 1];
-temp_offset_end=new int[len_row + 1];
+		row_offset_start=new int[len_row + 1];
+		row_offset_end=new int[len_row + 1];
+		parent=new int[len_row + 1];
+		Time=new int[len_row + 1];
+		value=new int[len_row + 1];
+		parent_new=new int[len_row + 1];
+		store_count=new int[len_row + 1];
+		visited_bfs=new int[len_row + 1];
+		visited_dfs=new int[len_row + 1];
+		visited_traverse=new int[len_row + 1];
+		single_row_offset_start=new int[len_row + 1];
+		single_row_offset_end=new int[len_row + 1];
+		temp_offset_end=new int[len_row + 1];
 
-Chains=new int[len_column + 1];
-column_offset=new int[len_column + 1];
-single_column_offset=new int[len_column + 1];
-column_offset_new=new int[len_column + 1];
+		Chains=new int[len_column + 1];
+		column_offset=new int[len_column + 1];
+		single_column_offset=new int[len_column + 1];
+		column_offset_new=new int[len_column + 1];
 
 		
 		for (i = 1; i <=len_row; i++)

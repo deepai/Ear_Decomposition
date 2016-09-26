@@ -87,7 +87,8 @@ void ear_decomposition()
 
 int main()
 {
-	scanf("%d %d",&len_row,&len_column);
+	scanf("%d",&len_row);
+	scanf("%d",&len_column);
 
 	column_offset = new int[len_column + 1];
 	visited = new int[len_row + 1];
