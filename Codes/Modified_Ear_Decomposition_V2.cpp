@@ -143,7 +143,9 @@ void dfs(int v) /*Making DFS tree on TUF graph*/
 void traverse(int s,int d) /*Printing All ear's*/
 {
 	int pointer=s;
-		//printf("%d ", s);
+	#ifdef VERIFY
+		printf("%d ", s);
+	#endif
 	Chains[chain_index]=s;
 	visited_traverse[pointer]=1;
 	chain_index++;
@@ -154,20 +156,26 @@ void traverse(int s,int d) /*Printing All ear's*/
 		{
 			Chains[chain_index]=pointer;
 			chain_index++;
-				//printf("%d ", pointer);
+			#ifdef VERIFY
+				printf("%d ", pointer);
+			#endif
 			break;
 		}
 		if (pointer==s )
 		{
 			Chains[chain_index]=pointer;
 			chain_index++;
-				//printf("%d ", pointer);
+			#ifdef VERIFY
+				printf("%d ", pointer);
+			#endif
 			break;
 		}
 		visited_traverse[pointer] = 1;
 		Chains[chain_index]=pointer;
 		chain_index++;
-			//printf("%d ", pointer);
+		#ifdef VERIFY
+			printf("%d ", pointer);
+		#endif
 		pointer=parent[pointer];
 	}
 	Chains[chain_index]=0;
@@ -177,7 +185,7 @@ void traverse(int s,int d) /*Printing All ear's*/
 void Ear_Decompostion() /*Selecting non tree edges from TUF to print ear's*/
 {
 	int i,j,end;
-				
+
 	for(i = 1; i <=len_row; i++)
 	{
 		for(j=row_offset_start[Time[i]];j<temp_offset_end[Time[i]];j++)
@@ -185,7 +193,9 @@ void Ear_Decompostion() /*Selecting non tree edges from TUF to print ear's*/
 			if (value[Time[i]] < value[column_offset_new[j]] && Time[i]!=parent[column_offset_new[j]] )  //The second condition is for tree edges.
 			{
 				traverse(Time[i],column_offset_new[j]);			
-				//printf("\n");
+				#ifdef VERIFY
+					printf("\n");
+				#endif
 			}
 		}
 	}
@@ -295,9 +305,9 @@ column_offset_new=new int[len_column + 1];
 		}
 		end_time=omp_get_wtime();
 		ear_decomp_time=end_time- start_time;
-
+		#ifndef VERIFY
 		printf("%lf\n",bfs_time + dfs_time + ear_decomp_time );
-
+		#endif
 		
 	return 0;
 
