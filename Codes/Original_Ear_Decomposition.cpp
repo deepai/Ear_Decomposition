@@ -33,7 +33,9 @@ int ind=0;
 void traverse(int s,int d)
 {
 	int pointer=s;
-	//printf("%d ", s); //
+	#ifdef VERIFY
+		printf("%d ", s); //
+	#endif
 	Chains[ind]=s;
 	Visited[pointer]=1;
 	ind++;
@@ -44,20 +46,26 @@ void traverse(int s,int d)
 		{
 			Chains[ind]=pointer;
 			ind++;
-			//printf("%d ", pointer); //
+			#ifdef VERIFY
+				printf("%d ", pointer); //
+			#endif
 			break;
 		}
 		if (pointer==s)
 		{
 			Chains[ind]=pointer;
 			ind++;
-			//printf("%d ", pointer);//
+			#ifdef VERIFY
+				printf("%d ", pointer);//
+			#endif
 			break;
 		}
 		Visited[pointer]=1;
 		Chains[ind]=pointer;
 		ind++;
-		//printf("%d ", pointer);//
+		#ifdef VERIFY
+			printf("%d ", pointer);//
+		#endif
 		pointer=parent[pointer];
 	}
 	Chains[ind]=0;
@@ -78,8 +86,10 @@ void ear_decomposition()
 			if (value[Time[i]] < value[column_offset[j]] && Time[i]!=parent[column_offset[j]] )  //The second condition is for tree edges.
 			{
 				no_chain++;
-				traverse(Time[i],column_offset[j]);			
-				//printf("\n");//
+				traverse(Time[i],column_offset[j]);
+				#ifdef VERIFY			
+					printf("\n");//
+				#endif
 			}
 		}
 	}
@@ -132,6 +142,8 @@ int main()
 
 		printf("\n******************************************\n");*/																																						
 
-	printf("%lf\n",ear_time+dfs_time);
+	#ifndef VERIFY
+		printf("%lf\n",ear_time+dfs_time);
+	#endif
     return 0;
 }
