@@ -115,7 +115,8 @@ int main(int argc,char* argv[])
 
 	int nodes1,nodes2,edges;
 
-	int i,j,wt;
+	int i,j;
+	double wt;
 	double eg;
 	string temp;
 
@@ -147,7 +148,7 @@ int main(int argc,char* argv[])
 			cin >> i >> j;
 		if(i == j)
 			continue;
-		insert_edge(i,j,wt,false);
+		insert_edge(i,j,(int)wt,false);
 		//printf("i=%d j=%d Edges = %d\n",i,j,Edges);
 	}
 

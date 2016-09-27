@@ -20,6 +20,11 @@ add_executable(
 )
 
 add_executable(
+	info
+	Codes/info.cpp
+)
+
+add_executable(
 	Ear_V2
 	Codes/Modified_Ear_Decomposition_V2.cpp
 )

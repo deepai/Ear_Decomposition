@@ -8,5 +8,6 @@
 
 time_original=$(bin/Ear_Original < data/$1".txt")
 time_our=$(bin/Ear_V2 < data/$1".txt")
+info=$(bin/info data/$1".txt")
 
-echo $1 $time_original $time_our >> results.txt
+echo $1 $info $time_original $time_our >> results.txt
