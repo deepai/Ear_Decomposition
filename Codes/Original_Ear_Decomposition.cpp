@@ -4,7 +4,7 @@
 #include <omp.h>
 
 int len_row,len_column;
-int *visited,*Visited,*row_offset,*column_offset; 
+int *dfs_visited,*Visited,*row_offset,*column_offset; 
 
 int *parent,*Time,count=1,*value,*Chains; 
 
@@ -12,7 +12,7 @@ int *parent,*Time,count=1,*value,*Chains;
 void dfs(int v) 
 {
 	int i,end;
-	visited[v]=1;
+	dfs_visited[v]=1;
 	Time[count]=v;
 	value[v]=count;
 	count++;
@@ -22,30 +22,39 @@ void dfs(int v)
 		end=len_column+1;
 	for(i=row_offset[v];i<end;i++)
 	{
-		if(visited[column_offset[i]]==0)
+		if(dfs_visited[column_offset[i]]==0)
 		{
 			parent[column_offset[i]]=v;
 			dfs(column_offset[i]);
 		}
 	}
 }
-int ind=0;
+
+void print()
+{
+	for(int i=1;i<=len_row;i++)
+	{
+			printf(" v = %d, Time[count] = %d, value[Time[count]] = %d\n",i, Time[i], value[i]);
+	}
+}
+
+//int ind=0;
 void traverse(int s,int d)
 {
 	int pointer=s;
 	#ifdef VERIFY
 		printf("%d ", s); //
 	#endif
-	Chains[ind]=s;
+	//Chains[ind]=s;
 	Visited[pointer]=1;
-	ind++;
+	//ind++;
 	pointer=d;
 	while(1)
 	{
 		if (Visited[pointer]==1)
 		{
-			Chains[ind]=pointer;
-			ind++;
+			//Chains[ind]=pointer;
+			//ind++;
 			#ifdef VERIFY
 				printf("%d ", pointer); //
 			#endif
@@ -53,23 +62,23 @@ void traverse(int s,int d)
 		}
 		if (pointer==s)
 		{
-			Chains[ind]=pointer;
-			ind++;
+			//Chains[ind]=pointer;
+			//ind++;
 			#ifdef VERIFY
 				printf("%d ", pointer);//
 			#endif
 			break;
 		}
 		Visited[pointer]=1;
-		Chains[ind]=pointer;
-		ind++;
+		//Chains[ind]=pointer;
+		//ind++;
 		#ifdef VERIFY
 			printf("%d ", pointer);//
 		#endif
 		pointer=parent[pointer];
 	}
-	Chains[ind]=0;
-	ind++;
+	//Chains[ind]=0;
+	//ind++;
 }
 int no_chain=0;
 void ear_decomposition()
@@ -100,7 +109,7 @@ int main()
 	scanf("%d %d",&len_row,&len_column);
 
 	column_offset = new int[len_column + 1];
-	visited = new int[len_row + 1];
+	dfs_visited = new int[len_row + 1];
 	Visited = new int[len_row + 1];
 	row_offset = new int[len_row + 1];
 	parent = new int[len_row + 1];
@@ -114,7 +123,7 @@ int main()
 	for (i = 1; i <=len_row; i++)
 	{
 		scanf("%d",&row_offset[i]);
-		visited[i]=0;
+		dfs_visited[i]=0;
 	}
 	for (i = 1; i <=len_column; i++)
 	{
@@ -129,6 +138,8 @@ int main()
 	dfs(1);
 	end_dfs=omp_get_wtime();
 	dfs_time=end_dfs - start_dfs;
+
+	print();
 
 	start_ear=omp_get_wtime();
 	ear_decomposition();

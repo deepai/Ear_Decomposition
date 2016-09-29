@@ -1,5 +1,3 @@
-
-
 #include <cstdio>
 #include <cstdlib>
 #include <map>
@@ -9,86 +7,9 @@
 #include <iostream>
 #include <vector>
 #include <sstream>
-
+#include <algorithm>
 
 using namespace std;
-
-map<int,set<pair<int,int> > > adjList;
-
-int Edges=0;
-int Nodes=0;
-
-void insert_edge(int a,int b,int wt,bool direction)
-{
-	if(adjList.find(a)!=adjList.end())
-	{
-		auto ret = adjList[a].insert({b,wt});
-		if(ret.second==true)
-			Edges++;
-	}
-	else
-	{
-		auto temp = set<pair <int,int> >();
-		temp.insert({b,wt});
-		adjList[a]=temp;
-		Edges++;
-	}
-	if(!direction)
-		insert_edge(b,a,wt,true);
-
-}
-
-int *visited;
-
-void dfs(int src)
-{
-	visited[src]=1;
-	auto it=adjList.find(src);
-	if(it != adjList.end())
-	{
-		auto temp = (*it).second;
-		for(auto ij : temp)
-		{
-			if(!visited[ij.first])
-			{
-				dfs(ij.first);
-			}
-		}
-	}
-}
-
-int cc()
-{
-	int count=0;
-	for(int i=1;i<=Nodes;i++)
-	{
-		if(!visited[i])
-		{
-			count++;
-			dfs(i);
-
-			if(i!=1)
-			{
-				insert_edge(1,i,rand()%100,false);
-			}
-		}
-	}
-	return count;
-}
-
-vector<int> values;
-
-void search_degree_two_vertices()
-{
-	values.clear();
-	for(auto e : adjList)
-	{
-		if(e.second.size() == 1)
-		{
-			values.push_back(e.first);
-		}
-	}
-}
 
 vector<string> split(const string &s, char delim) {
     stringstream ss(s);
@@ -99,6 +20,98 @@ vector<string> split(const string &s, char delim) {
     }
     return tokens;
 }
+
+map<int,int> relabel;
+
+class csr_graph
+{
+
+	struct compare
+	{
+		bool operator()(const pair<int,int> &lhs, const pair<int,int> &rhs)
+		{
+			if(lhs.first < rhs.first)
+				return true;
+			else if(lhs.first > rhs.first)
+				return false;
+			else 
+				return (lhs.second <= rhs.second);
+		}
+	};
+
+	vector<int> row_offsets;
+
+	vector<pair<int,int> > edges;
+
+	int row_size;
+	int col_size;
+
+public:
+	csr_graph()
+	{
+
+	}
+
+	~csr_graph()
+	{
+		edges.clear();
+		row_offsets.clear();
+	}
+
+	void insert_edge(int a,int b,bool direction)
+	{
+		edges.push_back({a,b});
+		if(!direction)
+			edges.push_back({b,a});
+	}
+
+	void sort_edges()
+	{
+		std::sort(edges.begin(),edges.end(),compare());
+	}
+
+	void set_nodes_edges(int nodes,int edges)
+	{
+		row_size = nodes;
+		edges = edges;
+
+		row_offsets.resize(row_size);
+	}
+
+	void construct_csr_graph()
+	{
+		for(int i=0;i<edges.size();i++)
+		{
+			row_offsets[edges[i].first]++;
+		}
+
+		int prev = 0,curr;
+
+		for(int i=0;i<row_offsets.size();i++)
+		{
+			curr = row_offsets[i];
+			row_offsets[i] = prev;
+			prev = prev + curr;
+		}
+	}
+
+	void print_graph()
+	{
+		printf("%d\n",row_offsets.size());
+		printf("%d\n",edges.size());
+
+		for(int i=0;i<row_offsets.size();i++)
+			printf("%d ",row_offsets[i] + 1);
+
+		printf("%d\n");
+
+		for(int i=0;i<edges.size();i++)
+			printf("%d ",edges[i].first + 1);
+
+		printf("%d\n");
+	}
+
+};
 
 int main(int argc,char* argv[])
 {
@@ -115,9 +128,6 @@ int main(int argc,char* argv[])
 
 	int nodes1,nodes2,edges;
 
-	int i,j;
-	double wt;
-	double eg;
 	string temp;
 
 	getline(cin,temp);
@@ -133,80 +143,41 @@ int main(int argc,char* argv[])
 	nodes2 = stoi(graph_dimension[1]);
 	edges  = stoi(graph_dimension[2]);
 
-	//	cout << nodes1 << " " << nodes2 << " " << edges << endl;
+	int u,v;
+	double wt = 0;
 
-	//cin >> nodes1 >> nodes2 >> edges;
+	int unique_nodes_count = 0;
 
-	//cout << temp << endl;
+	csr_graph graph;
 
-	for(int t=0;t<edges;t++)
+	for(int i=0;i<edges;i++)
 	{
-		//		fscanf(IN,"%d %d %d\n",&i,&j,&wt);
 		if(weighted)
-			cin >> i >> j >> wt;
-		else
-			cin >> i >> j;
-		if(i == j)
-			continue;
-		insert_edge(i,j,(int)wt,false);
-		//printf("i=%d j=%d Edges = %d\n",i,j,Edges);
-	}
-
-	visited=new int[nodes1+1];
-	for(int i=0;i<(nodes1+1);i++)
-		visited[i]=0;
-
-	Nodes=nodes1;
-
-	int num_components=cc();
-
-	//search_degree_two_vertices();
-
-	// while(!values.empty())
-	// {
-	// 	prune_degree_one_vertices();
-	// 	search_degree_two_vertices();
-	// }
-
-	// cerr << "Number of vertices removed " << count_removed <<  endl;
-
-	//printf("Number of Nodes=%d, number of edges=%d\n",Nodes,Edges);
-
-	//printf("Number of Connected Components = %d\n",num_components);
-
-	int count_edges_written=0;
-
-	int count_nodes = nodes1;
-
-	for(auto it : adjList)
-	{
-		count_edges_written += it.second.size();
-	}
-
-	//printf("%%%%MatrixMarket matrix coordinate integer symmetric\n");
-	
-	printf("%d\n%d\n",count_nodes,count_edges_written);
-
-	for(auto it : adjList)
-	{
-		printf("%d ",it.first);
-	}
-	printf("\n");
-
-	for(auto it : adjList)
-	{
-		auto temp=it.second;
-
-		int val2;
-
-		for(auto ij : temp)
 		{
-			val2 = ij.first;
-			printf("%d ",val2);
+			cin >> u >> v >> wt;
 		}
+		else
+			cin >> u >> v;
+
+		u--;
+		v--;
+
+		if(relabel.find(u) == relabel.end())
+			relabel[u] = unique_nodes_count++;
+
+		if(relabel.find(v) == relabel.end())
+			relabel[v] = unique_nodes_count++;
+
+		graph.insert_edge(relabel[u],relabel[v],false);
 	}
 
-	printf("\n");
+	graph.set_nodes_edges(unique_nodes_count, 2*edges);
+	graph.sort_edges();
+	graph.construct_csr_graph();
+	graph.print_graph();
+
+
 	return 0;
+	
 }
 

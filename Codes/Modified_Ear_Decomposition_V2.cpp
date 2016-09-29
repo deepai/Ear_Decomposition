@@ -146,16 +146,16 @@ void traverse(int s,int d) /*Printing All ear's*/
 	#ifdef VERIFY
 		printf("%d ", s);
 	#endif
-	Chains[chain_index]=s;
+	//Chains[chain_index]=s;
 	visited_traverse[pointer]=1;
-	chain_index++;
+	//chain_index++;
 	pointer=d;
 	while(1)
 	{
 		if (visited_traverse[pointer])
 		{
-			Chains[chain_index]=pointer;
-			chain_index++;
+			//Chains[chain_index]=pointer;
+			//chain_index++;
 			#ifdef VERIFY
 				printf("%d ", pointer);
 			#endif
@@ -163,23 +163,23 @@ void traverse(int s,int d) /*Printing All ear's*/
 		}
 		if (pointer==s )
 		{
-			Chains[chain_index]=pointer;
-			chain_index++;
+			//Chains[chain_index]=pointer;
+			//chain_index++;
 			#ifdef VERIFY
 				printf("%d ", pointer);
 			#endif
 			break;
 		}
 		visited_traverse[pointer] = 1;
-		Chains[chain_index]=pointer;
-		chain_index++;
+		//Chains[chain_index]=pointer;
+		//chain_index++;
 		#ifdef VERIFY
 			printf("%d ", pointer);
 		#endif
 		pointer=parent[pointer];
 	}
-	Chains[chain_index]=0;
-	chain_index++;
+	//Chains[chain_index]=0;
+	//chain_index++;
 }
 
 void Ear_Decompostion() /*Selecting non tree edges from TUF to print ear's*/
