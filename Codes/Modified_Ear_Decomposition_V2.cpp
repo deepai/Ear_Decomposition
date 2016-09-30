@@ -34,7 +34,6 @@ int *column_offset;
 int *single_column_offset;
 int *column_offset_new;
 
-
 void Store_Tree_U_Forest_New(int u , int v) /*Creating TUF graph in CSR format*/
 {
 		
@@ -47,10 +46,9 @@ void Store_Tree_U_Forest_New(int u , int v) /*Creating TUF graph in CSR format*/
 void bfs() /*Selecting Tree edges*/
 {
 	int s=1;
-	queue <int> bfs_queue,index_queue;
+	queue <int> bfs_queue;
 	int count=0;
 	bfs_queue.push(s);
-	index_queue.push(1);
 	count++;
 	visited_bfs[s]=1;
 	int end;
@@ -60,11 +58,9 @@ void bfs() /*Selecting Tree edges*/
 	{
 		
 		v = bfs_queue.front();
-		index_u=index_queue.front();
 		Time[v]=count;
 		count++;
 		bfs_queue.pop();
-		index_queue.pop();
 		for(i=row_offset_start[v];i<row_offset_end[v];i++)
 		{
 			w=column_offset[i];
@@ -72,7 +68,6 @@ void bfs() /*Selecting Tree edges*/
 			{
 				visited_bfs[w]=1;
 				bfs_queue.push(w);
-				index_queue.push(i);
 				Store_Tree_U_Forest_New(v,w);
 				parent_new[w]=v;
 				if(v>w)
@@ -292,6 +287,8 @@ column_offset_new=new int[len_column + 1];
 		
 		start_time=omp_get_wtime();
 		Ear_Decompostion();
+
+		/*		
 		for(i=1;i<=len_row;i++)
 		{
 			for(j=single_row_offset_start[i];j<single_row_offset_end[i];j++)
@@ -303,10 +300,15 @@ column_offset_new=new int[len_column + 1];
 			}
 
 		}
+		*/
 		end_time=omp_get_wtime();
 		ear_decomp_time=end_time- start_time;
 		#ifndef VERIFY
-		printf("%lf\n",bfs_time + dfs_time + ear_decomp_time );
+			printf("%lf,%lf,%lf,%lf,%lf\n",bfs_time + dfs_time + ear_decomp_time + random_edges_time,
+						       bfs_time,
+						       dfs_time,
+						       ear_decomp_time,
+						       random_edges_time);
 		#endif
 		
 	return 0;
