@@ -8,6 +8,7 @@
 #include <vector>
 #include <sstream>
 #include <algorithm>
+#include <cassert>
 
 using namespace std;
 
@@ -62,7 +63,7 @@ public:
 	{
 		edges.push_back({a,b});
 		if(!direction)
-			edges.push_back({b,a});
+			insert_edge(b,a,true);
 	}
 
 	void sort_edges()
@@ -73,7 +74,7 @@ public:
 	void set_nodes_edges(int nodes,int edges)
 	{
 		row_size = nodes;
-		edges = edges;
+		col_size = edges;
 
 		row_offsets.resize(row_size);
 	}
@@ -97,18 +98,25 @@ public:
 
 	void print_graph()
 	{
-		printf("%d\n",row_offsets.size());
-		printf("%d\n",edges.size());
+		printf("%d\n",row_size);
+		printf("%d\n",col_size);
 
 		for(int i=0;i<row_offsets.size();i++)
+		{
+			assert(row_offsets[i] < col_size);
 			printf("%d ",row_offsets[i] + 1);
+		}
+		//std::cerr << row_offsets[row_offsets.size() - 1] + 1 << std::endl;
 
-		printf("%d\n");
+		printf("\n");
 
 		for(int i=0;i<edges.size();i++)
+		{
+			assert(edges[i].first < row_size);
 			printf("%d ",edges[i].first + 1);
+		}
 
-		printf("%d\n");
+		printf("\n");
 	}
 
 };

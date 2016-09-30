@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <time.h>
 #include <omp.h>
+#include <cassert>
+#include <iostream>
 
 int len_row,len_column;
 int *dfs_visited,*Visited,*row_offset,*column_offset; 
@@ -27,14 +29,6 @@ void dfs(int v)
 			parent[column_offset[i]]=v;
 			dfs(column_offset[i]);
 		}
-	}
-}
-
-void print()
-{
-	for(int i=1;i<=len_row;i++)
-	{
-			printf(" v = %d, Time[count] = %d, value[Time[count]] = %d\n",i, Time[i], value[i]);
 	}
 }
 
@@ -106,7 +100,8 @@ void ear_decomposition()
 
 int main()
 {
-	scanf("%d %d",&len_row,&len_column);
+	scanf("%d",&len_row);
+	scanf("%d",&len_column);
 
 	column_offset = new int[len_column + 1];
 	dfs_visited = new int[len_row + 1];
@@ -123,11 +118,16 @@ int main()
 	for (i = 1; i <=len_row; i++)
 	{
 		scanf("%d",&row_offset[i]);
+		//std::cout << row_offset[i] << " " << i << std::endl;
+		assert(row_offset[i] <= len_column);
+
 		dfs_visited[i]=0;
 	}
 	for (i = 1; i <=len_column; i++)
 	{
 		scanf("%d",&column_offset[i]);
+		//std::cout << column_offset[i] << std::endl;
+		assert(column_offset[i] <= len_row);
 	}																																																													
 
 	parent[1]=0,value[1]=0,value[0]=0;
@@ -138,8 +138,6 @@ int main()
 	dfs(1);
 	end_dfs=omp_get_wtime();
 	dfs_time=end_dfs - start_dfs;
-
-	print();
 
 	start_ear=omp_get_wtime();
 	ear_decomposition();

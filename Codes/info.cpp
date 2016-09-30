@@ -18,7 +18,7 @@ int main(int argc, char** argv)
 	fin >> num_nodes;
 	fin >> num_columns;
 
-	cout << num_nodes << " " << num_columns/2 << endl;
+	cout << num_nodes << "," << num_columns/2 << endl;
 
 	fin.close();	
 
