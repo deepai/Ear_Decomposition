@@ -8,7 +8,7 @@
 #include <queue>
 using namespace std;
 
-
+int count_dfs_tree = 1;
 
 int i,len_row,len_column;
 int count=1;
@@ -34,13 +34,24 @@ int *column_offset;
 int *single_column_offset;
 int *column_offset_new;
 
-void Store_Tree_U_Forest_New(int u , int v) /*Creating TUF graph in CSR format*/
+#ifdef STATS
+	int T;
+	int TUF;
+#endif
+
+int threshold_offset = 1;
+
+inline void Store_Tree_U_Forest_New(int u , int v) /*Creating TUF graph in CSR format*/
 {
 		
 		column_offset_new[temp_offset_end[u]]=v;
 		temp_offset_end[u]++;
 		column_offset_new[temp_offset_end[v]]=u;
 		temp_offset_end[v]++;
+
+		#ifdef STATS
+			TUF += 2;
+		#endif
 }
 
 void bfs() /*Selecting Tree edges*/
@@ -64,8 +75,12 @@ void bfs() /*Selecting Tree edges*/
 		for(i=row_offset_start[v];i<row_offset_end[v];i++)
 		{
 			w=column_offset[i];
+			//intf("%d %d\n",row_offset_start[v],row_offset_end[v]);
 			if(visited_bfs[w]==0)
 			{
+				#ifdef STATS
+					T++;
+				#endif
 				visited_bfs[w]=1;
 				bfs_queue.push(w);
 				Store_Tree_U_Forest_New(v,w);
@@ -79,10 +94,30 @@ void bfs() /*Selecting Tree edges*/
 		}
 	}
 }
+// void dfs_bfs(int s)
+// {
+// 	Time[s] = count++;
+// 	int end = row_offset_end[s];
+// 	for(int i=row_offset_start[s];i<end;i++)
+// 	{
+// 		int w = column_offset[i];
+// 		if(visited_bfs[w] == 0)
+// 		{
+// 			visited_bfs[w] = 1;
+// 			Store_Tree_U_Forest_New(s,w);
+// 			parent_new[w] = s;
+// 			if(s>w)
+// 				store_count[w]++;
+// 			else
+// 				store_count[s]++;
+// 			dfs_bfs(w);
+// 		}
+// 	}
+// }
 
 int random_edges() /*Selecting log(n)-1 edges from each node*/
 {
-	int  threshold = log(len_row)/log(2);
+	int  threshold = threshold_offset * log(len_row)/log(2);
 	srand(time(NULL));
 	int v;
 	for(int u = 2; u <= len_row; u++)
@@ -202,24 +237,24 @@ int main()
 		scanf("%d %d",&len_row,&len_column);
 
 
-row_offset_start=new int[len_row + 1];
-row_offset_end=new int[len_row + 1];
-parent=new int[len_row + 1];
-Time=new int[len_row + 1];
-value=new int[len_row + 1];
-parent_new=new int[len_row + 1];
-store_count=new int[len_row + 1];
-visited_bfs=new int[len_row + 1];
-visited_dfs=new int[len_row + 1];
-visited_traverse=new int[len_row + 1];
-single_row_offset_start=new int[len_row + 1];
-single_row_offset_end=new int[len_row + 1];
-temp_offset_end=new int[len_row + 1];
+		row_offset_start=new int[len_row + 1];
+		row_offset_end=new int[len_row + 1];
+		parent=new int[len_row + 1];
+		Time=new int[len_row + 1];
+		value=new int[len_row + 1];
+		parent_new=new int[len_row + 1];
+		store_count=new int[len_row + 1];
+		visited_bfs=new int[len_row + 1];
+		visited_dfs=new int[len_row + 1];
+		visited_traverse=new int[len_row + 1];
+		single_row_offset_start=new int[len_row + 1];
+		single_row_offset_end=new int[len_row + 1];
+		temp_offset_end=new int[len_row + 1];
 
-Chains=new int[len_column + 1];
-column_offset=new int[len_column + 1];
-single_column_offset=new int[len_column + 1];
-column_offset_new=new int[len_column + 1];
+		Chains=new int[len_column + 1];
+		column_offset=new int[len_column + 1];
+		single_column_offset=new int[len_column + 1];
+		column_offset_new=new int[len_column + 1];
 
 		
 		for (i = 1; i <=len_row; i++)
@@ -247,6 +282,8 @@ column_offset_new=new int[len_column + 1];
 			{
 				row_offset_end[i]=row_offset_start[i+1]; 
 			}
+
+			//intf("%d %d\n",row_offset_start[i],row_offset_end[i]);
 		}
 		/*Generator Single CSR*/
 		int k=1,it,j;
@@ -268,21 +305,27 @@ column_offset_new=new int[len_column + 1];
 
 		double start_time,end_time,bfs_time,random_edges_time,dfs_time,ear_decomp_time;
 		
+		visited_bfs[1] = 1;
+		parent_new[1] = 1;
+
 		start_time=omp_get_wtime();
 		bfs();
 		end_time=omp_get_wtime();
 		bfs_time= end_time - start_time;
+		bfs_time *= 1000;
 
 
 		start_time=omp_get_wtime();
 		random_edges();
 		end_time=omp_get_wtime();
 		random_edges_time = end_time- start_time;
+		random_edges_time *= 1000;
 
 		start_time=omp_get_wtime();
 		dfs(1);
 		end_time=omp_get_wtime();
 		dfs_time=end_time - start_time;
+		dfs_time *= 1000;
 
 		
 		start_time=omp_get_wtime();
@@ -303,12 +346,27 @@ column_offset_new=new int[len_column + 1];
 		*/
 		end_time=omp_get_wtime();
 		ear_decomp_time=end_time- start_time;
+		ear_decomp_time *= 1000;
+
 		#ifndef VERIFY
+
+			#ifndef STATS
 			printf("%lf,%lf,%lf,%lf,%lf\n",bfs_time + dfs_time + ear_decomp_time + random_edges_time,
 						       bfs_time,
 						       dfs_time,
 						       ear_decomp_time,
 						       random_edges_time);
+			#endif
+
+			#ifdef STATS
+			printf("%lf,%lf,%lf,%lf,%lf,%d,%d\n",bfs_time + dfs_time + ear_decomp_time + random_edges_time,
+						       bfs_time,
+						       dfs_time,
+						       ear_decomp_time,
+						       random_edges_time,
+						       T,
+						       TUF);
+			#endif
 		#endif
 		
 	return 0;

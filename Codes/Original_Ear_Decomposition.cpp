@@ -138,11 +138,13 @@ int main()
 	dfs(1);
 	end_dfs=omp_get_wtime();
 	dfs_time=end_dfs - start_dfs;
+	dfs_time *= 1000;
 
 	start_ear=omp_get_wtime();
 	ear_decomposition();
 	end_ear=omp_get_wtime();
 	ear_time=end_ear - start_ear;
+	ear_time *= 1000;
 /*		printf("\n**************Original_Ear_Decomposition*****************\n\n");
     	printf("Time taken for Ear Decompostion: %lf seconds\n", ear_time+dfs_time);
 		printf("              (i)  DFS Tree: %lf seconds\n", dfs_time);
@@ -152,7 +154,7 @@ int main()
 		printf("\n******************************************\n");*/																																						
 
 	#ifndef VERIFY
-		printf("%lf\n",ear_time+dfs_time);
+		printf("%lf,%lf,%lf\n",ear_time+dfs_time,dfs_time,ear_time);
 	#endif
     return 0;
 }

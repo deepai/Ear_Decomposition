@@ -113,7 +113,7 @@ public:
 		for(int i=0;i<edges.size();i++)
 		{
 			assert(edges[i].first < row_size);
-			printf("%d ",edges[i].first + 1);
+			printf("%d ",edges[i].second + 1);
 		}
 
 		printf("\n");
@@ -177,6 +177,7 @@ int main(int argc,char* argv[])
 			relabel[v] = unique_nodes_count++;
 
 		graph.insert_edge(relabel[u],relabel[v],false);
+//		graph.insert_edge(u,v,false);
 	}
 
 	graph.set_nodes_edges(unique_nodes_count, 2*edges);
