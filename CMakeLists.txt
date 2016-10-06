@@ -28,11 +28,6 @@ add_executable(
 )
 
 add_executable(
-	generator
-	Codes/Generator.cpp
-)
-
-add_executable(
 	Ear_V2
 	Codes/Modified_Ear_Decomposition_V2.cpp
 )
@@ -40,13 +35,6 @@ add_executable(
 add_executable(
 	Ear_Original
 	Codes/Original_Ear_Decomposition.cpp
-)
-
-target_link_libraries(
-	generator
-	-lOGDF
-	-lCOIN
-	-pthread
 )
 
 
