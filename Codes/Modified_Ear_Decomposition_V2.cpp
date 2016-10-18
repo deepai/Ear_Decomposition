@@ -5,7 +5,7 @@
 #include <math.h>
 #include <time.h>
 #include <iostream>
-#include <queue>
+#include "queue.h"
 using namespace std;
 
 int count_dfs_tree = 1;
@@ -33,6 +33,8 @@ int *Chains;
 int *column_offset;
 int *single_column_offset;
 int *column_offset_new;
+
+queue<int> bfs_queue;
 
 #ifdef STATS
 	int T;
@@ -65,13 +67,14 @@ void bfs() /*Selecting Tree edges*/
 	int end;
 	parent_new[1]=1;
 	int v,w,i,j,end1,index_u,tmp;
-	while (!bfs_queue.empty())
+	while (!bfs_queue.isEmpty())
 	{
 		
-		v = bfs_queue.front();
+		//v = bfs_queue.front();
+		v = bfs_queue.pop();
 		Time[v]=count;
 		count++;
-		bfs_queue.pop();
+		//bfs_queue.pop();
 		for(i=row_offset_start[v];i<row_offset_end[v];i++)
 		{
 			w=column_offset[i];
@@ -255,6 +258,8 @@ int main()
 		column_offset=new int[len_column + 1];
 		single_column_offset=new int[len_column + 1];
 		column_offset_new=new int[len_column + 1];
+
+		bfs_queue.resize(len_row);
 
 		
 		for (i = 1; i <=len_row; i++)
